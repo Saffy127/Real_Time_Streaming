@@ -33,9 +33,20 @@ app.post('/ingest', (req, res) => {
     res.send('Data ingested');
 });
 
+const WebSocket = require('ws');
 
+// Initialize a WebSocket server
+const wss = new WebSocket.Server({ port: 3001 });
 
+// Event listener for WebSockeet connections
+wss.on('connection', (ws) => {
+    console.log('Client connected');
 
+    // Event listener for incoming messages 
+    ws.on('message', (message) => {
+        console.log(`Received: ${message}`);
+    });
+});
 
 
 // Define a route for the root URL("/") and send a response
