@@ -38,7 +38,14 @@ const WebSocket = require('ws');
 // Initialize a WebSocket server
 const wss = new WebSocket.Server({ port: 3001 });
 
-// Event listener for WebSockeet connections
+let dataPoints =[];
+
+function calculateMean() {
+    const sum = dataPoints.reduce((a, b) => a + b, 0);
+    return (sum / dataPoints.length) || 0;
+}
+
+// Event listener for WebSocket connections
 wss.on('connection', (ws) => {
     console.log('Client connected');
 
@@ -46,8 +53,23 @@ wss.on('connection', (ws) => {
     ws.on('message', (message) => {
         console.log(`Received: ${message}`);
     });
-});
 
+    ws.on('message', (massage) => {
+        // Parse and add the new data point to dataPoints array
+        const newDataPoint = JSON.parse(message);
+        dataPoints.push(newDataPoint);
+
+        // Calculate mean an send it back to the client
+        const meanValue = calculateMean();
+        ws.send(JSON.stringify({ mean: meanVaule}));
+    });
+
+    // Send random data to client at an interval
+    setInterval(() => {
+        const randomData = Math.floor(Math.random() * 100);
+        ws.send(JSON.stringify(randomData));
+    }, 1000); // 1 second interval
+});
 
 // Define a route for the root URL("/") and send a response
 app.get('/', (req, res) => {

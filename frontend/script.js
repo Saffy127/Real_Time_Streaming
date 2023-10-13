@@ -9,6 +9,31 @@ ws.addEventListener('open', () => {
     console.log('WebSocket connection opened');
 });
 
+// Initialize the chart with an additional dataset for the mean
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'Real-Time Data',
+                data: [],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Mean Value',
+                data: [],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+
+
+    }
+});
+
+
 // Fired when a message is received from the WebSocket server
 // Update this part of your script.js
 ws.addEventListener('message', (event) => {
